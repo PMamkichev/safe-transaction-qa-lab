@@ -1,0 +1,48 @@
+{
+  "name": "safe-transaction-qa-lab",
+  "version": "0.1.0",
+  "description": "Risk-based API and on-chain test automation for Safe Smart Account transaction flows.",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test:unit",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "env:check": "tsx scripts/check-environment.ts",
+    "env:check:stateful": "tsx scripts/check-environment.ts --stateful",
+    "setup:accounts": "tsx scripts/generate-test-environment.ts",
+    "setup:safe:predict": "tsx scripts/deploy-safe.ts",
+    "setup:safe:deploy": "tsx scripts/deploy-safe.ts --broadcast",
+    "test": "playwright test",
+    "test:list": "playwright test --list",
+    "test:unit": "playwright test --project=unit",
+    "test:read-only": "playwright test --project=read-only",
+    "test:sepolia": "playwright test --project=sepolia-e2e",
+    "test:report": "playwright show-report"
+  },
+  "dependencies": {
+    "@safe-global/api-kit": "5.0.3",
+    "@safe-global/protocol-kit": "8.0.7",
+    "@safe-global/types-kit": "4.0.1",
+    "dotenv": "17.4.2",
+    "viem": "2.56.3",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.63.0",
+    "@types/node": "26.5.0",
+    "eslint": "10.10.0",
+    "globals": "17.12.0",
+    "prettier": "3.9.6",
+    "tsx": "4.23.13",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.70.0"
+  }
+}

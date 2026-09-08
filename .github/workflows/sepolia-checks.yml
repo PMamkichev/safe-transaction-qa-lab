@@ -1,0 +1,79 @@
+name: Sepolia Checks
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_stateful:
+        description: Execute the state-changing 1 wei multisig scenario
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: safe-sepolia-e2e
+  cancel-in-progress: false
+
+jobs:
+  live-safe-checks:
+    name: Live Safe API and on-chain checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: sepolia
+    env:
+      SAFE_API_KEY: ${{ secrets.SAFE_API_KEY }}
+      SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
+      SAFE_ADDRESS: ${{ secrets.SAFE_ADDRESS }}
+      OWNER_A_PRIVATE_KEY: ${{ secrets.OWNER_A_PRIVATE_KEY }}
+      OWNER_B_PRIVATE_KEY: ${{ secrets.OWNER_B_PRIVATE_KEY }}
+      RECIPIENT_ADDRESS: ${{ secrets.RECIPIENT_ADDRESS }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate read-only environment
+        run: pnpm env:check
+
+      - name: Run live read-only checks
+        run: pnpm test:read-only
+
+      - name: Validate stateful environment
+        if: ${{ inputs.run_stateful }}
+        env:
+          STATEFUL_TESTS_ENABLED: 'true'
+        run: pnpm env:check:stateful
+
+      - name: Run stateful multisig scenario
+        if: ${{ inputs.run_stateful }}
+        env:
+          STATEFUL_TESTS_ENABLED: 'true'
+        run: pnpm test:sepolia
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sepolia-test-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14

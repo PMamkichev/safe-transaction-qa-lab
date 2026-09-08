@@ -1,0 +1,6 @@
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeExclude:
+  - '@safe-global/protocol-kit@8.0.7'
+  - '@safe-global/safe-deployments@1.37.63'
+  - '@safe-global/safe-modules-deployments@3.0.10'
