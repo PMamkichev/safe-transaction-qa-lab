@@ -32,6 +32,15 @@ const setupEnvironmentSchema = z.object({
   OWNER_B_PRIVATE_KEY: privateKeySchema,
 });
 
+const safeFundingEnvironmentSchema = setupEnvironmentSchema
+  .pick({
+    SEPOLIA_RPC_URL: true,
+    OWNER_A_PRIVATE_KEY: true,
+  })
+  .extend({
+    SAFE_ADDRESS: addressSchema,
+  });
+
 export type ReadOnlyConfig = {
   apiKey: string;
   rpcUrl: string;
@@ -50,8 +59,14 @@ export type SetupConfig = {
   ownerBPrivateKey: Hex;
 };
 
+export type SafeFundingConfig = {
+  rpcUrl: string;
+  ownerAPrivateKey: Hex;
+  safeAddress: Address;
+};
+
 export class ConfigurationError extends Error {
-  constructor(mode: 'read-only' | 'stateful' | 'setup', issues: z.core.$ZodIssue[]) {
+  constructor(mode: 'read-only' | 'stateful' | 'setup' | 'funding', issues: z.core.$ZodIssue[]) {
     const details = issues.map((issue) => `${issue.path.join('.')}: ${issue.message}`).join('; ');
     super(`Invalid ${mode} test configuration: ${details}`);
     this.name = 'ConfigurationError';
@@ -59,7 +74,7 @@ export class ConfigurationError extends Error {
 }
 
 function parseEnvironment<T>(
-  mode: 'read-only' | 'stateful' | 'setup',
+  mode: 'read-only' | 'stateful' | 'setup' | 'funding',
   schema: z.ZodType<T>,
   environment: NodeJS.ProcessEnv,
 ): T {
@@ -102,5 +117,17 @@ export function loadSetupConfig(environment: NodeJS.ProcessEnv = process.env): S
     rpcUrl: parsed.SEPOLIA_RPC_URL,
     ownerAPrivateKey: parsed.OWNER_A_PRIVATE_KEY,
     ownerBPrivateKey: parsed.OWNER_B_PRIVATE_KEY,
+  };
+}
+
+export function loadSafeFundingConfig(
+  environment: NodeJS.ProcessEnv = process.env,
+): SafeFundingConfig {
+  const parsed = parseEnvironment('funding', safeFundingEnvironmentSchema, environment);
+
+  return {
+    rpcUrl: parsed.SEPOLIA_RPC_URL,
+    ownerAPrivateKey: parsed.OWNER_A_PRIVATE_KEY,
+    safeAddress: parsed.SAFE_ADDRESS,
   };
 }

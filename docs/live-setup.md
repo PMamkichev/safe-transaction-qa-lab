@@ -34,8 +34,15 @@ broadcasts. After success, copy the printed Safe address into `SAFE_ADDRESS` in 
 
 ## 4. Fund the Safe
 
-Send a small amount of Sepolia ETH to the Safe address. The test transfers only 1 wei, but the
-Safe must have a positive balance.
+Use the guarded funding commands:
+
+```bash
+pnpm setup:safe:fund:dry-run
+pnpm setup:safe:fund
+```
+
+The dry run verifies the network and deployed contract. The broadcast command sends `0.001`
+Sepolia ETH from Owner A. The lifecycle test transfers only 1 wei, so this supports many runs.
 
 ## 5. Add Safe API access
 

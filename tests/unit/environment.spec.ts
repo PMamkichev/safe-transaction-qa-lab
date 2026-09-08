@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 import {
   ConfigurationError,
   loadReadOnlyConfig,
+  loadSafeFundingConfig,
   loadSetupConfig,
   loadStatefulConfig,
 } from '../../src/config/environment.js';
@@ -101,6 +102,20 @@ test.describe('environment configuration', () => {
       rpcUrl: 'https://rpc.example.test',
       ownerAPrivateKey,
       ownerBPrivateKey,
+    });
+  });
+
+  test('loads Safe funding configuration without exposing unrelated secrets', () => {
+    const config = loadSafeFundingConfig({
+      SEPOLIA_RPC_URL: 'https://rpc.example.test',
+      OWNER_A_PRIVATE_KEY: ownerAPrivateKey,
+      SAFE_ADDRESS: safeAddress,
+    });
+
+    expect(config).toEqual({
+      rpcUrl: 'https://rpc.example.test',
+      ownerAPrivateKey,
+      safeAddress,
     });
   });
 });

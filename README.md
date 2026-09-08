@@ -7,9 +7,8 @@
 Risk-based API and on-chain test automation for a Safe Smart Account multisignature
 transaction flow.
 
-> Project status: the deterministic framework and live-test implementation are complete. Live
-> Sepolia validation requires dedicated test credentials and is tracked separately from coded
-> coverage.
+> Project status: MVP complete and validated against a dedicated `2-of-2` Safe on Ethereum
+> Sepolia. The public execution evidence is documented separately from local credentials.
 
 ## Why this project exists
 
@@ -53,7 +52,7 @@ pnpm test:read-only
 STATEFUL_TESTS_ENABLED=true pnpm test:sepolia
 ```
 
-`pnpm check` runs 17 deterministic tests and does not require credentials or network access.
+`pnpm check` runs 19 deterministic tests and does not require credentials or network access.
 Live tests skip safely when their environment is not configured.
 
 ## Live environment
@@ -77,6 +76,10 @@ pnpm setup:safe:deploy
 The first command only predicts the `2-of-2` Safe address. The second command explicitly
 broadcasts its deployment. Copy the resulting address to `SAFE_ADDRESS`, add the Safe API key,
 and fund the Safe with at least 1 wei.
+
+For a reproducible funding step, run `pnpm setup:safe:fund:dry-run` and then
+`pnpm setup:safe:fund`; the latter transfers `0.001` Sepolia ETH from Owner A to the deployed
+Safe.
 
 Run `pnpm env:check:stateful` before the first state-changing test. The command reports only the
 mode, Safe address, and RPC origin; it never prints credentials.
@@ -107,6 +110,7 @@ transaction evidence file containing public addresses and transaction hashes.
 - [Risk analysis](docs/risk-analysis.md)
 - [AI-assisted workflow](docs/ai-assisted-workflow.md)
 - [Live Sepolia setup](docs/live-setup.md)
+- [Live test evidence](docs/test-evidence.md)
 - [Bug report policy](docs/bug-reports/README.md)
 
 ## License

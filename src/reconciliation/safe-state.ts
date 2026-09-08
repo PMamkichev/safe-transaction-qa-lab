@@ -12,6 +12,11 @@ function normalizeAddresses(addresses: Address[]): string[] {
   return addresses.map((address) => address.toLowerCase()).sort();
 }
 
+function normalizeContractVersion(version: string): string {
+  const metadataSeparator = version.indexOf('+');
+  return metadataSeparator === -1 ? version : version.slice(0, metadataSeparator);
+}
+
 export function reconcileSafeState(
   apiInfo: SafeInfo,
   onChainInfo: OnChainSafeInfo,
@@ -37,7 +42,7 @@ export function reconcileSafeState(
     differences.push(`owners: API=${apiOwners.join(',')}, on-chain=${onChainOwners.join(',')}`);
   }
 
-  if (apiInfo.version !== onChainInfo.version) {
+  if (normalizeContractVersion(apiInfo.version) !== normalizeContractVersion(onChainInfo.version)) {
     differences.push(`version: API=${apiInfo.version}, on-chain=${onChainInfo.version}`);
   }
 

@@ -10,7 +10,8 @@ the highest-value stable subset.
 
 1. Request the Safe through Transaction Service.
 2. Read the same Safe through Protocol Kit.
-3. Compare address, owners, threshold, nonce, and version.
+3. Compare address, owners, threshold, nonce, and the canonical contract version. Safe L2 build
+   metadata such as `+L2` is preserved in evidence but does not create a false mismatch.
 
 **Expected:** Both sources describe the same Safe state.
 

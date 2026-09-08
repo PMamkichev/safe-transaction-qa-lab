@@ -19,6 +19,8 @@
     "setup:accounts": "tsx scripts/generate-test-environment.ts",
     "setup:safe:predict": "tsx scripts/deploy-safe.ts",
     "setup:safe:deploy": "tsx scripts/deploy-safe.ts --broadcast",
+    "setup:safe:fund:dry-run": "tsx scripts/fund-safe.ts",
+    "setup:safe:fund": "tsx scripts/fund-safe.ts --broadcast",
     "test": "playwright test",
     "test:list": "playwright test --list",
     "test:unit": "playwright test --project=unit",

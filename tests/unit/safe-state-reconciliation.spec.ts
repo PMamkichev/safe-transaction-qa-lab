@@ -41,6 +41,15 @@ test.describe('Safe state reconciliation', () => {
     expect(result).toEqual({ matches: true, differences: [] });
   });
 
+  test('treats Safe L2 build metadata as the same base contract version', () => {
+    const result = reconcileSafeState(
+      { ...apiInfo, version: '1.4.1+L2' },
+      onChainInfo({ version: '1.4.1' }),
+    );
+
+    expect(result).toEqual({ matches: true, differences: [] });
+  });
+
   test('reports each inconsistent critical field', () => {
     const differentOwner = '0x9999999999999999999999999999999999999999' as Address;
     const result = reconcileSafeState(
