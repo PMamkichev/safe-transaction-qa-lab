@@ -10,6 +10,14 @@ transaction flow.
 > Project status: MVP complete and validated against a dedicated `2-of-2` Safe on Ethereum
 > Sepolia. The public execution evidence is documented separately from local credentials.
 
+<p align="center">
+  <img
+    src="docs/assets/safe-transaction-qa-evidence.png"
+    alt="Safe Transaction QA Lab evidence dashboard showing the Ethereum Sepolia 2-of-2 multisig lifecycle, automated test results, successful execution, and API-to-on-chain reconciliation"
+    width="100%"
+  />
+</p>
+
 ## Why this project exists
 
 A Web3 transaction can look successful in a user interface while an API, indexer, or
